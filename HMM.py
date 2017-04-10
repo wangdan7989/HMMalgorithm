@@ -8,14 +8,16 @@ Created on 2017-04-9
 
 import string
 import matplotlib.pyplot as plt
+from pylab import *
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy as np
-import UserSequence
+import UserSequences
+
 
 def load_file(file_name):
     """
     读取文件，按列返回列表
     :param file_name: 文件路径
-    :param charset: 文本内容decode的编码，默认为utf-8
     :return: 文本内容列表
     """
     f1 = open(file_name)
@@ -36,36 +38,65 @@ class HMM:
         self.trans_pro_matrix = np.loadtxt('./data/A.txt') # 转移概率矩阵
         vocab_list = load_file('./data/state_map.txt')
         self.vocab_map = dict(zip(vocab_list, range(vocab_list.__len__())))  # 词语映射哈希表
-        #self.emitter_pro_matrix = np.loadtxt('./data/B.txt')  # 发射概率矩阵
-        #print self.cixin_list
-        #print self.cixin_map
-        #print vocab_list
-        #print self.vocab_map
+        print self.cixin_map
         del vocab_list
         print '初始化完毕'
 
+    def hmm(self, usersequences):
+        """
+        :param usersequences: 用户的行为序列
+        :return: 对应用户行为序列的转移概率序列
+        """
+        state_seq = []
+        usersequences = usersequences
+        state = ''
+        pre_state = usersequences[0][1]+'\n'
+        prob = 0
+        for i in range(len(usersequences)):
+            state = usersequences[i][1]
+            state = state+'\n'
+            #print state
+            #print self.cixin_map['SNSSS\n']
+            #print self.cixin_map[state], '****',self.cixin_map[pre_state]
+            try:
+                if self.cixin_map.has_key(state):
+                    #print self.cixin_map[state], self.cixin_map[pre_state]
+                    prob = self.trans_pro_matrix[self.cixin_map[state]][self.cixin_map[pre_state]]
+                else:
+                    #print state,"没有在cixin_map里"
+                    state_seq.append(0)
+                    #print i,state_seq[i]
+                    continue
 
-def hmm(self, usersequence):
-    """
-    :param usersequence: 用户的行为序列
-    :return: 对应用户行为序列的转移概率序列
-    """
+            except KeyError:
+                pass
+            state_seq.append(prob)
+            pre_state = state
 
-    return result_cixin
+        result_state = state_seq
+        return result_state
 
-if __name__=='__main__':
+if __name__ == '__main__':
+
     H = HMM()
     import time
     t1 = time.time()
-    print H.hmm([u'结合', u'成', u'分子', u'时'])
+    user = UserSequences.GetUserSequences('MAR0955')
+    result = H.hmm(user)
+    #for i in range(len(result)):
+     #   print i,result[i]
     t2 = time.time()
-"""
-    print 11
+
+    xmajorLocator = MultipleLocator(100)
+
+    ymajorLocator = MultipleLocator(2)
     fig = plt.figure()
-    ax1 = fig.add_subplot(1,1,1)
-    x=[1,2,3,4,5]
-    y=[0.1,0.2,0.3,0.4,0.5]
-    plt.plot(x,y)
+    ax = subplot(111)
+    x=range(len(result))
+    print x
+    #y=[0.1,0.2,0.3,0.4,0.5]
+    #plt.plot(x,result,'--r*')
+    plt.plot(x, result, 'ro', label='point')
+    #plt.legend()
     plt.show()
-"""
 

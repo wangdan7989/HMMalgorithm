@@ -10,9 +10,9 @@ import datetime
 
 def GetUserSingleSequence(employee):
     db = MySQLUtil.ITDB()
-    user='CEL0561'
+    #user='CEL0561'
     k=5  #用户一条行为序列的长度
-    #user = employee
+    user = employee
     Squencedevice= {}
     Squencelogon = {}
     Squencefile = {}
@@ -66,8 +66,6 @@ def GetUserSingleSequence(employee):
         elif i == 4:
             Squenceemail = Squence
 
-
-
     SquenceMerge = Squencelogon.copy()
     SquenceMerge.update(Squencedevice)
     SquenceMerge.update(Squencefile)
@@ -76,19 +74,14 @@ def GetUserSingleSequence(employee):
 
     list=sorted(SquenceMerge.items(),key=lambda item:item[0])
 
-
-
     f=open('./data/SingleSequence.txt','w')
     for i in range(len(list)):
         f.write(list[i][0])
         f.write(':')
         f.write(list[i][1])
         f.write('\n')
-        print list[i]
+        #print list[i]
     f.close()
-
-
-
 
     return list
 

@@ -95,7 +95,6 @@ if __name__ == '__main__':
     f = open('./data/state_map.txt', 'w')
     for i in cixin_set:
         f.write(i)
-        f.write('\n')
     f.close()
 """
     vocab_lines = load_file("./data/chineseDic.txt", 'GBK')

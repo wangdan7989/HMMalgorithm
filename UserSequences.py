@@ -7,7 +7,7 @@ Created on 2017-04-9
 
 import SingleSequence
 
-def GetUserSequence(employee):
+def GetUserSequences(employee):
     list=SingleSequence.GetUserSingleSequence(employee)
     k=4
     StandSequence = {}
@@ -20,12 +20,13 @@ def GetUserSequence(employee):
         sequ = list[i][1] + '-' + list[i + 1][1] + '-' + list[i + 2][1] + '-' + list[i + 3][1] + '-' + list[i + 4][1]
         state = str(list[i][1])[0] + str(list[i + 1][1])[0] + str(list[i + 2][1])[0] + str(list[i + 3][1])[0] + \
                 str(list[i + 4][1])[0]
-        print sequ, state
+        #print sequ, state
         tem = [sequ, state]
         if state not in StandSequence.keys():
             StandSequence[state] = sequ
         UserSequence.append(tem)
-
+    return UserSequence
+"""
     f = open('./data/UserSequence.txt', 'w')
     for i in range(len(UserSequence)):
         f.write(UserSequence[i][0])
@@ -42,6 +43,6 @@ def GetUserSequence(employee):
         f.write(value)
         f.write('\n')
     f.close()
-
+"""
 if __name__ =='__main__':
-    GetUserSequence('w')
+    GetUserSequences('w')
