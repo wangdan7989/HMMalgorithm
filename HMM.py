@@ -92,11 +92,14 @@ if __name__ == '__main__':
     ymajorLocator = MultipleLocator(2)
     fig = plt.figure()
     ax = subplot(111)
-    x=range(len(result))
-    print x
+    y = result[:1500]
+    x=range(len(y))
+    plt.ylim(-3,3)
+    #print x
     #y=[0.1,0.2,0.3,0.4,0.5]
     #plt.plot(x,result,'--r*')
-    plt.plot(x, result, 'ro', label='point')
+    plt.plot(x,y)
+    #plt.plot(x, result)
     #plt.legend()
     plt.show()
 

@@ -12,21 +12,24 @@ def GetUserSequences(employee):
     k=4
     StandSequence = {}
     UserSequence = []
-    sequ = ''
-    state = ''
-    for i in (range(len(list) - 4)):
-        #for j in k:
-          #  sequ=sequ+'-'+list[i+k][1]
-        sequ = list[i][1] + '-' + list[i + 1][1] + '-' + list[i + 2][1] + '-' + list[i + 3][1] + '-' + list[i + 4][1]
-        state = str(list[i][1])[0] + str(list[i + 1][1])[0] + str(list[i + 2][1])[0] + str(list[i + 3][1])[0] + \
-                str(list[i + 4][1])[0]
+
+    for i in (range(len(list) - k)):
+        sequ = ''
+        state = ''
+        for j in range(k):
+
+            sequ = sequ+list[i+j][1]+'-'
+            state = state+str(list[i+j][1])[0]
+        #sequ = list[i][1] + '-' + list[i + 1][1] + '-' + list[i + 2][1] + '-' + list[i + 3][1] + '-' + list[i + 4][1]
+        #state = str(list[i][1])[0] + str(list[i + 1][1])[0] + str(list[i + 2][1])[0] + str(list[i + 3][1])[0] + \
+         #       str(list[i + 4][1])[0]
         #print sequ, state
         tem = [sequ, state]
         if state not in StandSequence.keys():
             StandSequence[state] = sequ
         UserSequence.append(tem)
-    return UserSequence
-"""
+
+    """
     f = open('./data/UserSequence.txt', 'w')
     for i in range(len(UserSequence)):
         f.write(UserSequence[i][0])
@@ -43,6 +46,8 @@ def GetUserSequences(employee):
         f.write(value)
         f.write('\n')
     f.close()
-"""
-if __name__ =='__main__':
-    GetUserSequences('w')
+    """
+    return UserSequence
+
+if __name__  == '__main__':
+    GetUserSequences('CEL0561')
