@@ -9,9 +9,9 @@ Created on 2017-04-9
 
 运行完毕后
 共生成5个txt
-cixin_map.txt:  词性列表 用来获得每个词性映射在矩阵中对应的索引
+state_map.txt:  词性列表 用来获得每个词性映射在矩阵中对应的索引
 A.txt:  转移矩阵
-cixin_pro.txt:  词性概率列表 每个词性对应出现的概率
+state_pro.txt:  词性概率列表 每个词性对应出现的概率
 vocab_map.txt:  词列表 用来获得每个词映射在矩阵中对应的索引
 B.txt:  发射矩阵
 '''
@@ -60,40 +60,47 @@ def row_normalization(X):
 
 
 if __name__ == '__main__':
+
+    state_line = load_file("./data/StandeSequence.txt")
+
+    #统计有多少种状态
+    state_set = set()
+    for line in state_line:
+        words = line.split(':')
+        #print words[0]
+        state_set.add(words[1])
+    state_set.add('other\n')
+
     lines = load_file("./data/UserSequence.txt")
-
-    # 统计多少种词性
-    cixin_set = set()
+    state_num = state_set.__len__()
+    print state_num
+    state_map = dict(zip(list(state_set), range(state_num)))  # state_map['j']表示该词性在词性表对应的索引位置
+    print state_map
+    trans_pro_matrix = np.zeros((state_num, state_num))  # 转移矩阵
+    state_pro = np.zeros(state_num, dtype=float)  # 每个词性出现的概率
+    pre_state = ''
+    state = ''
     for line in lines:
         words = line.split(':')
-        #print words[1]
-        cixin_set.add(words[1])
+        state = (words[1])
 
-    cixin_num = cixin_set.__len__()
-    print cixin_num
-    cixin_map = dict(zip(list(cixin_set), range(cixin_num)))  # cixin_map['j']表示该词性在词性表对应的索引位置
-
-    trans_pro_matrix = np.zeros((cixin_num, cixin_num))  # 转移矩阵
-    cixin_pro = np.zeros(cixin_num, dtype=float)  # 每个词性出现的概率
-    pre_cixin = ''
-    cixin = ''
-    for line in lines:
-        words = line.split(':')
-        cixin = (words[1])
-        cixin_pro[cixin_map[cixin]] += 1
+        if state_map.has_key(state):
+            state_pro[state_map[state]] += 1
+        else:
+            state_pro[state_map['other\n']] += 1
         try:
-            trans_pro_matrix[cixin_map[cixin]][cixin_map[pre_cixin]] += 1
+            trans_pro_matrix[state_map[state]][state_map[pre_state]] += 1
         except KeyError:
             pass
-        pre_cixin = cixin
-
+        pre_state = state
+    #print trans_pro_matrix
     trans_pro_matrix = row_normalization(trans_pro_matrix)  # 按行标准化后得转移概率矩阵
 
-    cixin_pro = row_normalization(cixin_pro)
+    state_pro = row_normalization(state_pro)
     np.savetxt('./data/A.txt', trans_pro_matrix)  # 保存转移矩阵为A.txt
-    np.savetxt('./data/state_pro.txt', cixin_pro)  # 保存词性概率列表为cixin_pro.txt
+    np.savetxt('./data/state_pro.txt', state_pro)  # 保存词性概率列表为state_pro.txt
     f = open('./data/state_map.txt', 'w')
-    for i in cixin_set:
+    for i in state_set:
         f.write(i)
     f.close()
 """
@@ -106,9 +113,9 @@ if __name__ == '__main__':
     for line in lines:
         words = line.split()
         for word in words:
-            vocab, cixin = word.split('/')
+            vocab, state = word.split('/')
             try:
-                emitter_pro_matrix[vocab_map[vocab]][cixin_map[cixin]] += 1
+                emitter_pro_matrix[vocab_map[vocab]][state_map[state]] += 1
             except KeyError:
                 # print vocab, '不在词库内 忽略不计'
                 pass

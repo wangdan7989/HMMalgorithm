@@ -9,45 +9,58 @@ import SingleSequence
 
 def GetUserSequences(employee):
     list=SingleSequence.GetUserSingleSequence(employee)
-    k=4
-    StandSequence = {}
+    k=6
     UserSequence = []
 
     for i in (range(len(list) - k)):
         sequ = ''
         state = ''
         for j in range(k):
-
             sequ = sequ+list[i+j][1]+'-'
             state = state+str(list[i+j][1])[0]
-        #sequ = list[i][1] + '-' + list[i + 1][1] + '-' + list[i + 2][1] + '-' + list[i + 3][1] + '-' + list[i + 4][1]
-        #state = str(list[i][1])[0] + str(list[i + 1][1])[0] + str(list[i + 2][1])[0] + str(list[i + 3][1])[0] + \
-         #       str(list[i + 4][1])[0]
-        #print sequ, state
+
         tem = [sequ, state]
-        if state not in StandSequence.keys():
-            StandSequence[state] = sequ
         UserSequence.append(tem)
 
-    """
+
     f = open('./data/UserSequence.txt', 'w')
     for i in range(len(UserSequence)):
         f.write(UserSequence[i][0])
         f.write(':')
         f.write(UserSequence[i][1])
         f.write('\n')
-        print UserSequence[i]
+        #print UserSequence[i]
     f.close()
+
+    return UserSequence
+
+
+def GetStandeSequence(user_list):
+    StandSequence = {}
+    for user in user_list:
+        usersequence = GetUserSequences(user)
+        for i in range(len(usersequence)):
+            state = usersequence[i][1]
+            if state not in StandSequence.keys():
+                StandSequence[state] = 1
+            else:
+                StandSequence[state] += 1
 
     f = open('./data/StandeSequence.txt', 'w')
     for key, value in StandSequence.items():
-        f.write(key)
-        f.write(':')
-        f.write(value)
-        f.write('\n')
+        if value > 5:
+            value = str(value)
+            f.write(value)
+            f.write(':')
+            f.write(key)
+            f.write('\n')
+            print key, value
     f.close()
-    """
-    return UserSequence
 
+    return StandSequence
 if __name__  == '__main__':
-    GetUserSequences('CEL0561')
+    #user = 'CEL0561'
+    #GetUserSequences(user)
+
+    user_list = ['RSC0089']
+    GetStandeSequence(user_list)
