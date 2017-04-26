@@ -2,13 +2,14 @@
 '''
 Created on 2017-04-9
 
-@author: Wangan
+@author: Wangdan
 '''
 
 import SingleSequence
 
-def GetUserSequences(employee):
-    list=SingleSequence.GetUserSingleSequence(employee)
+
+def GetUserSequences(employee,start_date,finish_date):
+    list=SingleSequence.GetUserSingleSequence(employee,start_date,finish_date)
     k=6
     UserSequence = []
 
@@ -35,32 +36,46 @@ def GetUserSequences(employee):
     return UserSequence
 
 
-def GetStandeSequence(user_list):
+def GetStandeSequence(user,start_date,finish_date):
     StandSequence = {}
+    '''
+    #标准用户画像由多个正常用户一起刻画
     for user in user_list:
-        usersequence = GetUserSequences(user)
+        usersequence = GetUserSequences(user,start_date,finish_date)
         for i in range(len(usersequence)):
             state = usersequence[i][1]
             if state not in StandSequence.keys():
                 StandSequence[state] = 1
             else:
                 StandSequence[state] += 1
+    '''
+
+    usersequence = GetUserSequences(user,start_date,finish_date)
+    for i in range(len(usersequence)):
+        state = usersequence[i][1]
+        if state not in StandSequence.keys():
+            StandSequence[state] = 1
+        else:
+            StandSequence[state] += 1
 
     f = open('./data/StandeSequence.txt', 'w')
     for key, value in StandSequence.items():
-        if value > 5:
+        if value > 0:
             value = str(value)
             f.write(value)
             f.write(':')
             f.write(key)
             f.write('\n')
-            print key, value
+            #print key, value
     f.close()
 
     return StandSequence
 if __name__  == '__main__':
-    #user = 'CEL0561'
-    #GetUserSequences(user)
-
-    user_list = ['RSC0089']
-    GetStandeSequence(user_list)
+    #user = 'WAB0143'
+    #user = 'JLM0364'
+    user = ['WAB0143']
+    #user_list = ['RSC0089']
+    start_date = '2009-12-01'
+    finish_date = '2010-11-31'
+    #GetUserSequences(user, start_date, finish_date)
+    GetStandeSequence(user, start_date, finish_date)

@@ -25,7 +25,7 @@ def GetStandeSequence(user_list):
         value = str(value)
         f.write(value)
         f.write('\n')
-        print key, value
+        #print key, value
     f.close()
 
     return StandSequence

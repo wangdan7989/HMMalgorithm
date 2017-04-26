@@ -39,7 +39,7 @@ def row_normalization(X):
     :param X: 矩阵
     :return: 归一化后的矩阵
     """
-    print X
+    #print X
     X.dtype = 'float'
     try:
         X.shape[1]
@@ -59,7 +59,7 @@ def row_normalization(X):
     return X
 
 
-if __name__ == '__main__':
+def GetTransiMatrix():
 
     state_line = load_file("./data/StandeSequence.txt")
 
@@ -73,9 +73,9 @@ if __name__ == '__main__':
 
     lines = load_file("./data/UserSequence.txt")
     state_num = state_set.__len__()
-    print state_num
+    #print state_num
     state_map = dict(zip(list(state_set), range(state_num)))  # state_map['j']表示该词性在词性表对应的索引位置
-    print state_map
+    #print state_map
     trans_pro_matrix = np.zeros((state_num, state_num))  # 转移矩阵
     state_pro = np.zeros(state_num, dtype=float)  # 每个词性出现的概率
     pre_state = ''

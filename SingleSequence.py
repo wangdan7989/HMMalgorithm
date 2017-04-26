@@ -8,7 +8,7 @@ from util import MySQLUtil
 import datetime
 
 
-def GetUserSingleSequence(employee):
+def GetUserSingleSequence(employee,start_date,finish_date):
     db = MySQLUtil.ITDB()
     #user='CEL0561'
     k=5  #用户一条行为序列的长度
@@ -19,11 +19,11 @@ def GetUserSingleSequence(employee):
     Squenceemail = {}
     Squencehttp = {}
 
-    sql_device = "SELECT user,activity,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_device a where date>'2010-01-01' and date<'2011-01-01'and a.user='" + user + "';"
-    sql_logon = "SELECT user,activity,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_logon a where date>'2010-01-01' and date<'2011-01-01'and a.user='"+user+"';"
-    sql_file = "SELECT user,filename,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_file a where date>'2010-01-01' and date<'2011-01-01'and a.user='"+user+"';"
-    sql_email = "SELECT user,to_user,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_email a where date>'2010-01-01' and date<'2011-01-01'and a.user='" + user + "';"
-    sql_http = "SELECT user,url,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_http a where date>'2010-01-01' and date<'2011-01-01'and a.user='" + user + "';"
+    sql_device = "SELECT user,activity,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_device a where a.user='" + user + "' and date >'"+start_date+"' and date <'"+finish_date+"' ;"
+    sql_logon = "SELECT user,activity,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_logon a where a.user='"+user+"' and date >'"+start_date+"' and date <'"+finish_date+"' ;"
+    sql_file = "SELECT user,filename,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_file a where a.user='"+user+"' and date >'"+start_date+"' and date <'"+finish_date+"' ;"
+    sql_email = "SELECT user,to_user,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_email a where a.user='" + user + "' and date >'"+start_date+"' and date <'"+finish_date+"' ;"
+    sql_http = "SELECT user,url,date_format(date,'%j %T') as a FROM threat_4_2.threat_action_http a where a.user='" + user + "' and date >'"+start_date+"' and date <'"+finish_date+"' ;"
 
     action=''
     for i in (range(5)):
@@ -72,9 +72,25 @@ def GetUserSingleSequence(employee):
     SquenceMerge.update(Squencehttp)
     SquenceMerge.update(Squenceemail)
 
+
     list=sorted(SquenceMerge.items(),key=lambda item:item[0])
 
+    i = 0
+    #print len(list)
+    if len(list) > 0:
+        while True:
+            if list[i][1] == 'Url' and list[i + 1][1] == 'Url':
+              del list[i + 1]
+            else:
+                i = i+1
+
+            if i >= len(list) - 2:
+                break
+        #print len(list),'****',i
+
+
     f=open('./data/SingleSequence.txt','w')
+
     for i in range(len(list)):
         f.write(list[i][0])
         f.write(':')
@@ -87,4 +103,4 @@ def GetUserSingleSequence(employee):
 
 
 if __name__ == '__main__':
-    GetUserSingleSequence('w')
+    GetUserSingleSequence('MAR0955','2009-12-01','2011-01-31')

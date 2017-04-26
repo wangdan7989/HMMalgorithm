@@ -14,6 +14,7 @@ import numpy as np
 import UserSequences
 
 
+
 def load_file(file_name):
     """
     读取文件，按列返回列表
@@ -69,10 +70,14 @@ class HMM:
         result_state = state_seq
         return result_state
 
-def average(list):
-    return sum(list)/len(list)
+
 
 if __name__ == '__main__':
+    #user = 'JLM0364'
+    #user = 'WAB0143'
+    user = 'WAB0143'
+    start_date = '2010-11-31'
+    finish_date = '2011-01-31'
 
     H = HMM()
     import time
@@ -84,7 +89,9 @@ if __name__ == '__main__':
     user02 = 'CEL0561'
     user00 ='RSC0089'
     user11 = 'ABC0174'
-    usersequence = UserSequences.GetUserSequences(user14)
+
+    #UserSequences.GetStandeSequence(user, start_date, finish_date)
+    usersequence = UserSequences.GetUserSequences(user, start_date, finish_date)
     result = H.hmm(usersequence)
     #for i in range(len(result)):
      #   print i,result[i]
@@ -92,13 +99,14 @@ if __name__ == '__main__':
 
     print average(result)
 
-    '''
+
     xmajorLocator = MultipleLocator(100)
 
     ymajorLocator = MultipleLocator(2)
     fig = plt.figure()
     ax = subplot(111)
-    y = result[:1500]
+    y = result[:1000]
+    #y = result
     x=range(len(y))
     plt.ylim(-3,3)
     #print x
@@ -108,4 +116,4 @@ if __name__ == '__main__':
     #plt.plot(x, result)
     #plt.legend()
     plt.show()
-    '''
+
