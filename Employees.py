@@ -9,7 +9,7 @@ from util import MySQLUtil
 
 
 def queryLeaveEmployees():     #统计离职员工
-    sql="SELECT employee_id,leave_date,state FROM threat_4_2.threat_basic_employee where service_state=0 limit 10;"
+    sql="SELECT employee_id,leave_date,state FROM threat_4_2.threat_basic_employee where service_state=0;"
     db=MySQLUtil.ITDB()
     employees=db.querytl(sql)
     return employees

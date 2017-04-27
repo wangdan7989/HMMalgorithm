@@ -6,7 +6,7 @@ Created on 2017-04-9
 '''
 
 
-import string
+import preProcess
 import matplotlib.pyplot as plt
 from pylab import *
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
@@ -39,9 +39,8 @@ class HMM:
         self.trans_pro_matrix = np.loadtxt('./data/A.txt') # 转移概率矩阵
         vocab_list = load_file('./data/state_map.txt')
         self.vocab_map = dict(zip(vocab_list, range(vocab_list.__len__())))  # 词语映射哈希表
-        #print self.state_map
         del vocab_list
-        print '初始化完毕'
+        #print '初始化完毕'
 
     def hmm(self, usersequences):
         """
@@ -73,29 +72,19 @@ class HMM:
 
 
 if __name__ == '__main__':
-    #user = 'JLM0364'
-    #user = 'WAB0143'
-    user = 'WAB0143'
-    start_date = '2010-11-31'
-    finish_date = '2011-01-31'
+    user = 'DAR0885'
+    start_date = '2009-12-01'
+    finish_date = '2009-12-28'
 
-    H = HMM()
-    import time
-    t1 = time.time()
-    user14 = 'MAR0955'
-    user12 = 'JLM0364'
-    user13 = 'MAS0025'
-    user01 = 'CRD0624'
-    user02 = 'CEL0561'
-    user00 ='RSC0089'
-    user11 = 'ABC0174'
 
-    #UserSequences.GetStandeSequence(user, start_date, finish_date)
+    if len(UserSequences.GetStandeSequence(user, start_date, finish_date)) <1:
+        print 1111
+    preProcess.GetTransiMatrix()
+    start_date = '2009-12-28'
+    finish_date = '2010-2-28'
     usersequence = UserSequences.GetUserSequences(user, start_date, finish_date)
+    H = HMM()
     result = H.hmm(usersequence)
-    #for i in range(len(result)):
-     #   print i,result[i]
-    t2 = time.time()
 
     print average(result)
 

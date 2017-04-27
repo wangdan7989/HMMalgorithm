@@ -4,35 +4,46 @@ import preProcess
 from HMM import *
 from dateutil.relativedelta import relativedelta
 import Employees
+import time
 
 def average(list):
     return sum(list) / len(list)
+
 if __name__ == '__main__':
+
+    t1 = time.time()
     start_date = '2009-12-01'
     employees = Employees.queryLeaveEmployees()
     f = open('./data/Result.txt', 'w')
     for user in employees:
+        #print user
         end_date = user[1] + relativedelta(days=1)
         middle_date = end_date - relativedelta(months=2)
-        user = str(user[0])
+        employee = str(user[0])
         middle_date = str(middle_date)
         end_date = str(end_date)
 
-        UserSequences.GetStandeSequence(user, start_date, middle_date)
+        if len(UserSequences.GetStandeSequence(employee, start_date, middle_date)) < 1:
+            continue
+
         preProcess.GetTransiMatrix()
-        usersequence = UserSequences.GetUserSequences(user, middle_date, end_date)
+        usersequence = UserSequences.GetUserSequences(employee, middle_date, end_date)
 
         H = HMM()
-        import time
-        t1 = time.time()
+
         result = H.hmm(usersequence)
-        t2 = time.time()
+        print employee,average(result),user[2]
+        prosqu = str(average(result))
 
-        print average(result)
-        prosqu = average(result)
+        f.write(user[0])
+        f.write(': ')
+        f.write(prosqu)
+        f.write(': ')
+        f.write(str(user[2]))
+        f.write('\n')
 
-        f.write(user[0],': ',prosqu,'',user[2],'\n')
-
+    t2 = time.time()
+    #print t2-t1
     f.close()
 
     '''
