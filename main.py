@@ -14,7 +14,8 @@ if __name__ == '__main__':
     t1 = time.time()
     start_date = '2009-12-01'
     employees = Employees.queryLeaveEmployees()
-    f = open('./data/Result.txt', 'w')
+    #f = open('./data/Result.txt', 'w')
+    f = open('./data/ProSquenceResult.txt', 'w')
     for user in employees:
         #print user
         end_date = user[1] + relativedelta(days=1)
@@ -33,7 +34,7 @@ if __name__ == '__main__':
 
         result = H.hmm(usersequence)
         print employee,average(result),user[2]
-        prosqu = str(average(result))
+        prosqu = str(result)
 
         f.write(user[0])
         f.write(': ')
