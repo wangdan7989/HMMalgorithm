@@ -1,4 +1,23 @@
 # -*- coding: utf-8 -*-
+'''
+Created on 2017-04-25
+
+@author: Wangan
+
+说明
+通过计算每个用户的状态转移概率的平均值来判断是否是威胁用户，
+如果平均值大于0.8则是则是正常用户，反之则是威胁用户，
+结果：
+正常用户测试准确率：0.797297297297
+normal_P=判断正确的正常用户/总的正常用户
+
+
+威胁用户测试准确率：0.928571428571
+abnormal_P=判断正确的异常用户/总的异常用户
+
+
+总的正确率：0.861111111111
+'''
 import matplotlib.pyplot as plt
 from pylab import *
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter

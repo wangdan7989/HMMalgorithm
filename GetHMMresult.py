@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+'''
+Created on 2017-04-25
+
+@author: Wangan
+
+说明
+得到用户的状态转移概率
+'''
 
 import preProcess
 from HMM import *

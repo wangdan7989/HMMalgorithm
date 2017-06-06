@@ -1,6 +1,13 @@
 # -*- coding: utf8 -*-
-# Copyright © 2015-2016 Jay Sinco -v python2.6
+'''
+Created on 2017-04-25
 
+@author: Wangan
+
+说明
+为前馈神经网络，对前面的隐马尔科夫状态序列进行分类，正确率在60左右，linux下有一个基于tenserflow的前馈神经网络代码，精度在82
+输入为用户的状态转移概率序列，输出为正常和威胁两个值
+'''
 import random
 import math
 import matplotlib.pyplot as plt
@@ -157,6 +164,7 @@ def GetTrain_Set():
         line = line.split(':')
         line[1] = line[1].replace('[', '')
         line[1] = line[1].replace(']', '')
+
         words = str(line[1]).split(',')
         sta = float(line[2].replace('\n', ''))
         words = [float(item) for item in words]
@@ -210,7 +218,20 @@ if __name__  == '__main__':
 
     NN = ConstructNN()
     Train_Set = GetTrain_Set()
+    '''
+    #将原来的格式按照 标签+特征+换行  写入新的文件NewProSquenceResult
 
+    f = open('./data/NewProSquenceResult.txt', 'w')
+    for item in Train_Set:
+        if item[1][0] == 1:
+            f.write('1,')
+        else:
+            f.write('2,')
+        for w in item[0]:
+            f.write(str(w)+',')
+        f.write('\n')
+        #print item
+    '''
     t2 = time.time()
 
     print 'time:',t2-t1
@@ -218,6 +239,7 @@ if __name__  == '__main__':
     while count < 144:
         test(count, NN, Train_Set)
         count += 1
+
 
 
 
