@@ -1,0 +1,13 @@
+BDisconnect
+Blogon
+CDisconnect
+BSendEmail
+CConnect
+other
+BUrl
+CUrl
+CNologon
+BConnect
+BFileCopy
+CFileCopy
+CSendEmail

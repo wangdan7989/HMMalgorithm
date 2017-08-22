@@ -1,23 +1,32 @@
 # -*- coding: utf-8 -*-
+'''
+根据main中得到的result，即概率序列的平均值，来对最中的结果进行判断，看是否判断正确，后面的state是真实的用户的的状态值
+'''
 import matplotlib.pyplot as plt
 from pylab import *
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy as np
+import csv
 def Decision():
     normal_pro = []
     abnormal_pro = []
     f = open('./data/Result.txt')
     line = f.readline()
-    while line:
-        words = line.split(':')
-        #print len(words[2])
+    with open('data/avgresult.csv', 'wb') as csvfilemax:
+        spamwritermax = csv.writer(csvfilemax, dialect='excel')
 
-        if words[2] == ' 1\n':
-            abnormal_pro.append(float(words[1]))
-        elif words[2] == ' 0\n':
-            normal_pro.append(float(words[1]))
+        while line:
+            words = line.split(':')
+            #print len(words[2])
+            print words
+            spamwritermax.writerow(words)
 
-        line = f.readline()
+            if words[2] == ' 1\n':
+                abnormal_pro.append(float(words[1]))
+            elif words[2] == ' 0\n':
+                normal_pro.append(float(words[1]))
+
+            line = f.readline()
     print abnormal_pro
     print '*****************************'
     print normal_pro

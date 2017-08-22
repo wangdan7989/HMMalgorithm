@@ -59,19 +59,20 @@ def row_normalization(X):
     return X
 
 
-def GetTransiMatrix():
-
-    state_line = load_file("./data/StandeSequence.txt")
+def GetTransiMatrix(user):
+    standesquenceFile = "./data/allusers/Train/"+user+".csv"
+    usersquenceFile = "./data/allusers/Train/" + user + ".csv"
+    state_line = load_file(standesquenceFile)
 
     #统计有多少种状态
     state_set = set()
     for line in state_line:
-        words = line.split(':')
+        words = line.split(',')
         #print words[0]
         state_set.add(words[1])
     state_set.add('other\n')
 
-    lines = load_file("./data/UserSequence.txt")
+    lines = load_file(usersquenceFile)
     state_num = state_set.__len__()
     #print state_num
     state_map = dict(zip(list(state_set), range(state_num)))  # state_map['j']表示该词性在词性表对应的索引位置
@@ -81,7 +82,7 @@ def GetTransiMatrix():
     pre_state = ''
     state = ''
     for line in lines:
-        words = line.split(':')
+        words = line.split(',')
         state = (words[1])
 
         if state_map.has_key(state):
@@ -97,9 +98,61 @@ def GetTransiMatrix():
     trans_pro_matrix = row_normalization(trans_pro_matrix)  # 按行标准化后得转移概率矩阵
 
     state_pro = row_normalization(state_pro)
-    np.savetxt('./data/A.txt', trans_pro_matrix)  # 保存转移矩阵为A.txt
-    np.savetxt('./data/state_pro.txt', state_pro)  # 保存词性概率列表为state_pro.txt
-    f = open('./data/state_map.txt', 'w')
+    AFile = './data/allusers/Amatrix/'+user+'A.txt'
+    state_proFile = './data/allusers/Statepro/' + user + 'state_pro.txt'
+    state_mapFile = './data/allusers/Statemap/' + user + 'state_map.txt'
+    np.savetxt(AFile, trans_pro_matrix)  # 保存转移矩阵为A.txt
+    np.savetxt(state_proFile, state_pro)  # 保存词性概率列表为state_pro.txt
+    f = open(state_mapFile, 'w')
+    for i in state_set:
+        f.write(i)
+    f.close()
+
+def GetTransiMatrixV2(user):
+    standesquenceFile = "./data/allusers/Train/"+user+".csv"
+    usersquenceFile = "./data/allusers/Train/" + user + ".csv"
+    state_line = load_file(standesquenceFile)
+
+    #统计有多少种状态
+    state_set = set()
+    for line in state_line:
+        words = line
+        print words
+        state_set.add(words)
+    state_set.add('other\n')
+
+    lines = load_file(usersquenceFile)
+    state_num = state_set.__len__()
+    #print state_num
+    state_map = dict(zip(list(state_set), range(state_num)))  # state_map['j']表示该词性在词性表对应的索引位置
+    #print state_map
+    trans_pro_matrix = np.zeros((state_num, state_num))  # 转移矩阵
+    state_pro = np.zeros(state_num, dtype=float)  # 每个词性出现的概率
+    pre_state = ''
+    state = ''
+    for line in lines:
+        words = line
+        state = (words)
+
+        if state_map.has_key(state):
+            state_pro[state_map[state]] += 1
+        else:
+            state_pro[state_map['other\n']] += 1
+        try:
+            trans_pro_matrix[state_map[state]][state_map[pre_state]] += 1
+        except KeyError:
+            pass
+        pre_state = state
+    #print trans_pro_matrix
+    trans_pro_matrix = row_normalization(trans_pro_matrix)  # 按行标准化后得转移概率矩阵
+
+    state_pro = row_normalization(state_pro)
+    AFile = './data/allusers/Amatrix/'+user+'A.txt'
+    state_proFile = './data/allusers/Statepro/' + user + 'state_pro.txt'
+    state_mapFile = './data/allusers/Statemap/' + user + 'state_map.txt'
+    np.savetxt(AFile, trans_pro_matrix)  # 保存转移矩阵为A.txt
+    np.savetxt(state_proFile, state_pro)  # 保存词性概率列表为state_pro.txt
+    f = open(state_mapFile, 'w')
     for i in state_set:
         f.write(i)
     f.close()
@@ -128,3 +181,6 @@ def GetTransiMatrix():
         f.write('\n')
     f.close()
 """
+if __name__  == '__main__':
+    #print load_file('./data/allusers/UserSequence.csv')
+    GetTransiMatrix()

@@ -12,7 +12,7 @@ from pylab import *
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy as np
 import UserSequences
-
+import CSVFile
 
 
 def load_file(file_name):
@@ -29,26 +29,33 @@ def load_file(file_name):
         line = f1.readline()
     return line_list
 class HMM:
-    def __init__(self):
+    def __init__(self,user):
         """
         初始化
         :return:
         """
-        self.state_list = load_file('./data/state_map.txt')
+        AFile = './data/allusers/Amatrix/' + user + 'A.txt'
+        state_mapFile = './data/allusers/Statemap/' + user + 'state_map.txt'
+
+        self.state_list = load_file(state_mapFile)#'./data/allusers/state_map.txt'
         self.state_map = dict(zip(self.state_list, range(self.state_list.__len__())))  # 词性映射哈希表
-        self.trans_pro_matrix = np.loadtxt('./data/A.txt') # 转移概率矩阵
-        vocab_list = load_file('./data/state_map.txt')
+        self.trans_pro_matrix = np.loadtxt(AFile) # 转移概率矩阵 './data/allusers/A.txt'
+        vocab_list = load_file(state_mapFile)#'./data/allusers/state_map.txt'
         self.vocab_map = dict(zip(vocab_list, range(vocab_list.__len__())))  # 词语映射哈希表
         del vocab_list
         #print '初始化完毕'
 
-    def hmm(self, usersequences):
+    def hmm(self, user):
         """
         :param usersequences: 用户的行为序列
         :return: 对应用户行为序列的转移概率序列
         """
+
         state_seq = []
-        usersequences = usersequences
+
+        #usersequences = usersequences
+        usertestfile = "./data/allusers/Test/" + user + ".csv"
+        usersequences = CSVFile.loadCSVfile1(usertestfile)
         state = ''
         pre_state = usersequences[0][1]+'\n'
         prob = 0
@@ -69,23 +76,62 @@ class HMM:
         result_state = state_seq
         return result_state
 
+    def hmmV2(self, usersequences):
+        """
+        :param usersequences: 用户的行为序列
+        :return: 对应用户行为序列的转移概率序列
+        """
 
+        state_seq = []
+
+        usersequences = usersequences
+        #usertestfile = "./data/allusers/Test/" + user + ".csv"
+        #usersequences = CSVFile.loadCSVfile1(usertestfile)
+        state = ''
+        pre_state = usersequences[0] + '\n'
+        prob = 0
+        for i in range(len(usersequences)):
+            state = usersequences[i]
+            state = state + '\n'
+
+            try:
+                if self.state_map.has_key(state) == False:
+                    state = 'other\n'
+                prob = self.trans_pro_matrix[self.state_map[state]][self.state_map[pre_state]]
+
+            except KeyError:
+                pass
+            state_seq.append(prob)
+            pre_state = state
+
+        result_state = state_seq
+        del(result_state[0])
+        result = Getproduct(result_state)
+        print (Getproduct(result_state))
+        return result
+
+def Getproduct(list):
+    num = 1
+    for i in list:
+        num *= i
+    return num
 
 if __name__ == '__main__':
-    user = 'DAR0885'
-    start_date = '2009-12-01'
-    finish_date = '2009-12-28'
+    user = 'DLM0051'
+    start_date = '2010-1-01'
+    finish_date = '2011-1-28'
 
 
     if len(UserSequences.GetStandeSequence(user, start_date, finish_date)) <1:
+    #if len(UserSequences.GetUserSequences(user, start_date, finish_date)) < 1:
         print 1111
-    preProcess.GetTransiMatrix()
-    start_date = '2009-12-28'
-    finish_date = '2010-2-28'
+    preProcess.GetTransiMatrix(user)
+    start_date = '2011-1-28'
+    finish_date = '2011-4-30'
     usersequence = UserSequences.GetUserSequences(user, start_date, finish_date)
-    H = HMM()
+    H = HMM(user)
     result = H.hmm(usersequence)
-
+    print "result:",result
     print average(result)
 
 
