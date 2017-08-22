@@ -5,14 +5,14 @@ Created on 2017-04-9
 @author: Wangan
 
 说明
-从 199801文档中 统计转移概率和发射概率 并分别导出转移矩阵和发射矩阵.
+hmm的具体算法
 
 运行完毕后
 共生成5个txt
-state_map.txt:  词性列表 用来获得每个词性映射在矩阵中对应的索引
+state_map.txt:  状态列表 用来获得每个状态映射在矩阵中对应的索引
 A.txt:  转移矩阵
-state_pro.txt:  词性概率列表 每个词性对应出现的概率
-vocab_map.txt:  词列表 用来获得每个词映射在矩阵中对应的索引
+state_pro.txt:  状态概率列表 每个状态对应出现的概率
+
 B.txt:  发射矩阵
 '''
 import numpy as np

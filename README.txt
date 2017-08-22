@@ -13,3 +13,12 @@ Nologon:N
 然后注释掉写入文件
 运行preProcess，得到状态转换矩阵，以及其他的状态映射表
 最后运行HMM，输入需要测试的用户的user
+
+
+hmm文件主要是构建hmm类的，可以进行单个用户的测试
+gethmmresult文件是得到144个用户的状态序列，并写入文件ProSquenceResult.txt
+decision：操作ProSquenceResult.txt中的数据，通过计算每个用户的状态转移概率的平均值来判断是否是威胁用户，
+			如果平均值大于0.8则是则是正常用户，反之则是威胁用户
+BNNmodel：用神经网络来对ProSquenceResult.txt中的数据进行分类
+
+NewProSquenceResult.txt:对原来的格式进行改变为：标签+特征+换行  便于基于linux下有一个基于tenserflow的前馈神经网络代码的输入
