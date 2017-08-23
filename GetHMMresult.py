@@ -10,9 +10,9 @@ Created on 2017-04-25
 说明
 得到用户的状态转移概率
 '''
->>>>>>> 34c6dfe6197febd37f54b0a34e607135f3d0d8e2:GetHMMresult.py
+#>>>>>>> 34c6dfe6197febd37f54b0a34e607135f3d0d8e2:GetHMMresult.py
 
-'''
+
 import preProcess
 from HMM import *
 from dateutil.relativedelta import relativedelta
@@ -44,7 +44,7 @@ def GetVar(nlist):
     var = float(summ)/float(n)
     return var
 
-<<<<<<< HEAD:main.py
+#<<<<<<< HEAD:main.py
 def GetResult():
     k=4
     UserSequences.Gettraintestdata(k)
@@ -70,14 +70,14 @@ def GetResult():
         print "average:",average(result), state
         result.insert(0, user)
         resultlist.append(result)
-=======
+#=======
     t1 = time.time()
     start_date = '2009-12-01'
     employees = Employees.queryLeaveEmployees()
     #f = open('./data/Result.txt', 'w')
     f = open('./data/ProSquenceResult.txt', 'w')
-    for user in employees:
->>>>>>> 34c6dfe6197febd37f54b0a34e607135f3d0d8e2:GetHMMresult.py
+    #for user in employees:
+#>>>>>>> 34c6dfe6197febd37f54b0a34e607135f3d0d8e2:GetHMMresult.py
         #print user
     resultfile = './data/allusers/'+k+'ResultPro974.csv'
     avgresultfile = './data/allusers/'+k+'AvgResultPro974.csv'
@@ -123,14 +123,14 @@ def plotresult():
             abnormalcov.append(prestate)
 
 
-<<<<<<< HEAD:main.py
+#<<<<<<< HEAD:main.py
     print normalcov
     print abnormalcov
-=======
-        result = H.hmm(usersequence)
-        print employee,average(result),user[2]
-        prosqu = str(result)
->>>>>>> 34c6dfe6197febd37f54b0a34e607135f3d0d8e2:GetHMMresult.py
+#=======
+ #       result = H.hmm(usersequence)
+  #      print employee,average(result),user[2]
+  #      prosqu = str(result)
+#>>>>>>> 34c6dfe6197febd37f54b0a34e607135f3d0d8e2:GetHMMresult.py
 
     list.sort(normalcov)
     list.sort(abnormalcov)
