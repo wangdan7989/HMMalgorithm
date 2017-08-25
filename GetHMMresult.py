@@ -260,9 +260,9 @@ def PloROC(list,r,times):
 
             if (tp + fn) == 0 or (fp + tn) == 0:
                 continue
-            tpr = float(tp) / (float(tp) + float(fn))
-            fpr = float(fp) / (float(fp) + float(tn))
-            print tpr, fpr
+        tpr = float(tp) / (float(tp) + float(fn))
+        fpr = float(fp) / (float(fp) + float(tn))
+        print tpr, fpr
         TPR.append(tpr)
         FPR.append(fpr)
         thr = i*r

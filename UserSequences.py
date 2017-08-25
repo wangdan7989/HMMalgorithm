@@ -229,6 +229,8 @@ def GettraintestdataV2(employee):
     print "TestUserSequence",len(TestUserSequence)
     return TestUserSequence
 
+#得到隐马尔科夫的训练以及测试数据。用最后30的数据，前20天作为训练数据，后10天作为测试数据
+
 
 
 if __name__  == '__main__':
