@@ -107,14 +107,23 @@ class HMM:
 
         result_state = state_seq
         del(result_state[0])
-        result = Getproduct(result_state)
-        print (Getproduct(result_state))
+        #每天的概率相乘
+        #result = Getproduct(result_state)
+        # 每天的概率相加（MM）
+        result = Getsum(result_state)
+        #print (Getproduct(result_state))
         return result
 
 def Getproduct(list):
     num = 1
     for i in list:
         num *= i
+    return num
+
+def Getsum(list):
+    num = 1
+    for i in list:
+        num += i
     return num
 
 if __name__ == '__main__':

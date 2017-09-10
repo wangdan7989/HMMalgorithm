@@ -3,6 +3,7 @@ import GetHMMresult
 import CSVFile
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import math
 
 #归一化
@@ -18,7 +19,8 @@ def  Normalization(nlist):
 def GetweekconnectUser():
     connectuser = CSVFile.loadCSVfile1('./data/deviceConnect.csv')
     #weekuser = CSVFile.loadCSVfile1('./data/allusers/weekdayvar.csv')
-    weekuser = CSVFile.loadCSVfile1('./data/allusers/weekpro.csv')
+    #weekuser = CSVFile.loadCSVfile1('./data/allusers/weekpro.csv')
+    weekuser = CSVFile.loadCSVfile1('./data/allusers/MM_week_result.csv')
 
     userinfo = []
     for citem in connectuser:
@@ -30,7 +32,7 @@ def GetweekconnectUser():
                 userinfo.append(witem)
     print len(userinfo)
     print userinfo
-    #CSVFile.Writecsvtofile('./data/allusers/connect_weekdayvar.csv',userinfo)
+    #CSVFile.Writecsvtofile('./data/allusers/MM_connect_week.csv',userinfo)
 
     FTPR = []
     TPR = []
@@ -39,7 +41,7 @@ def GetweekconnectUser():
     a = 0
     b = 1
     userinfo = weekuser
-    for i in range(90000):
+    for i in range(6000):
     #for i in range(15000):
         tp = 0
         fp = 0
@@ -69,6 +71,7 @@ def GetweekconnectUser():
                     tp = tp + 1
                     #fn = fn + 1
         if (tp + fn) == 0 or (fp + tn) == 0:
+            thr = thr + 0.1
             continue
         tpr = float(tp) / (float(tp) + float(fn))
         fpr = float(fp) / (float(fp) + float(tn))
@@ -76,8 +79,8 @@ def GetweekconnectUser():
 
         TPR.append(tpr)
         FPR.append(fpr)
-        #thr = 0.001*i
-
+        thr = thr+0.1
+        '''
         if i<10:
             i = 0.1*i
         if i < 100 and i>10:
@@ -89,7 +92,7 @@ def GetweekconnectUser():
             # thr=i*100
         if i > 40000:
             thr = i * 100000
-
+        '''
 
     '''
     p = float(tp)/(float(tp)+float(fp))
@@ -103,7 +106,7 @@ def GetweekconnectUser():
     #CSVFile.Writecsvtofile('./data/allusers/weekconnetproFT.CSV',)
     data = pd.DataFrame({'FPR':TPR,
                          'TPR':FPR})
-    #data.to_csv('./data/allusers/result/ROC_data/weekconnectpro.csv')
+    data.to_csv('./data/allusers/result/ROC_data/MM_weekconnectpro.csv')
 
     plt.figure()
     plt.plot(TPR, FPR, 'r')
@@ -307,6 +310,7 @@ def GetnewscoresPR_XY():
     rocXY = pd.DataFrame
     plt.figure()
     for i in range(11):
+        data1 = pd.DataFrame()
         tem = 'newscore'+str(i)
         newscores = data[tem]
         TPR = []
@@ -316,6 +320,7 @@ def GetnewscoresPR_XY():
         thr = 0
         trp = 0
         thr = 0
+        thred = []
         r=0.0001
         for k in range(11000):
             tp = 0
@@ -350,9 +355,16 @@ def GetnewscoresPR_XY():
             #FPR.append(fpr)
             TRP.append(trp)
             RECALL.append(recall)
+            thred.append(thr)
             thr = thr+ r
 
-
+        print i
+        data1['threshold'] = thred
+        data1['percision'] = TRP
+        data1['recall'] = RECALL
+        filename = './data/allusers/iForestdata/Different_weight_precision/'+str(i)+'.csv'
+        data1.to_csv(filename)
+        '''
         #plt.plot(FPR, TPR, 'r')
         plt.plot(RECALL, TRP, 'r')
         x = [0, 1]
@@ -367,7 +379,157 @@ def GetnewscoresPR_XY():
         iy = iforoc['PRE']
         plt.plot(ix, iy, 'y')
         plt.show()
-
+        '''
 #GetnewscoresROC_XY()
 #GetMMweekdayacv_PR_XY()
-GetnewscoresPR_XY()
+#GetnewscoresPR_XY()
+#GetweekconnectUser()
+'''
+#画用户的异常分数图
+data = pd.read_csv('./data/allusers/iForestdata/vaild_fusion_logscore.csv',index_col='id')
+state = data['states']
+scores = data['logscore']
+abnormalx = []
+abnormaly = []
+for i in range(len(state)):
+    if state[i] ==1:
+        abnormalx.append(i)
+        abnormaly.append(scores[i])
+
+x = range(len(scores))
+fig= plt.figure()
+ax = fig.add_subplot(1,1,1)
+
+ax.set_xlabel('Users')
+ax.set_ylabel('Anormaly_Score')
+
+
+l1,=ax.plot(x,scores,'*b',label = 'normal_users')
+l2,=ax.plot(abnormalx,abnormaly,'*r',label = 'abnormal_uaers')
+
+
+sin_legend = ax.legend(handles=[l1], loc='lower right')
+ax.add_artist(sin_legend)
+sin_legend = ax.legend(handles=[l2], loc='lower right')
+ax.add_artist(sin_legend)
+y1=[1.3,1.3]
+x1=[0,250]
+ax.plot(x1,y1,'-m',label = 'Threshold')
+
+ax.legend(loc='lower right')
+ax.grid(True)
+
+ax.plot(x,scores,'-b')
+ax.set_ylim(-0.3,2.8)
+plt.savefig('./data/allusers/result/figure/figure2.eps',dpi = 1000,bbox_inches='tight')
+plt.show()
+'''
+'''
+#mm 和impro_mm的ROC对比
+data1 = pd.read_csv('./data/allusers/result/ROC_data/weekdayconnectavg.csv',index_col='id')
+data2 = pd.read_csv('./data/allusers/result/ROC_data/weekconnectpro.csv',index_col='id')
+data3 = pd.read_csv('./data/allusers/result/ROC_data/MM_weekconnectpro.csv',index_col='id')
+FPR1 = data1['FPR']
+TPR1 =data1['TPR']
+FPR2 = data2['FPR']
+TPR2 =data2['TPR']
+FPR3 = data3['FPR']
+TPR3 =data3['TPR']
+
+fig= plt.figure()
+ax = fig.add_subplot(1,1,1)
+l1, = ax.plot(FPR1,TPR1,'-m',label = 'iT')
+l2, = ax.plot(FPR2,TPR2,'-y',label = 'iP')
+l3, = ax.plot(FPR3,TPR3,'-c',label = 'MM')
+sin_legend = ax.legend(handles=[l1], loc='lower right')
+ax.add_artist(sin_legend)
+sin_legend = ax.legend(handles=[l2], loc='lower right')
+ax.add_artist(sin_legend)
+sin_legend = ax.legend(handles=[l3], loc='lower right')
+ax.add_artist(sin_legend)
+#plt.legend(l1,('week_normalscore',),loc='lower right')
+#plt.legend(l2,('week_avgnormalscore',),loc='upper right')
+#plt.style.use('mystyle')
+
+ax.legend(loc='lower right')
+ax.grid(True)
+#plt.show()
+#box = ax.get_position()
+#ax.set_position([box.x0, box.y0, box.width , box.height* 0.8])
+#ax.legend(loc='center left', bbox_to_anchor=(0.2, 1.12),ncol=2)
+
+ax.set_xlabel('False Positive %')
+ax.set_ylabel('Insiders Identified %')
+
+y1=[0,1]
+x1=[0,1]
+ax.plot(x1,y1,'-b')
+plt.savefig('./data/allusers/result/figure/figure1.eps',dpi = 1000,bbox_inches='tight')
+plt.show()'''
+'''
+x = np.arange(10)
+fig = plt.figure()
+ax = plt.subplot(111)
+for i in xrange(5):
+    ax.plot(x, i * x, label='$y = %ix$'%i)
+# Shrink current axis by 20%
+box = ax.get_position()
+ax.set_position()
+# Put a legend to the right of the current axis
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+plt.show()
+
+'''
+
+#one hour 用户的行为统计
+data = pd.read_csv('./data/allusers/iForestdata/onehour/connect/newavg.csv',index_col='id')
+#print data
+normalmode = data['normamode'][:24]
+abnormalmode = data['abnormalmode'][:24]
+normalmax = data['normalmax'][:24]
+abnormalmax = data['abnormalmax'][:24]
+print normalmode
+print abnormalmode
+print normalmax
+print abnormalmax
+times=['00:00:00','01:00:00','02:00:00','03:00:00','04:00:00','05:00:00','06:00:00','07:00:00','08:00:00','09:00:00','10:00:00','11:00:00','12:00:00','13:00:00','14:00:00','15:00:00','16:00:00','17:00:00','18:00:00','19:00:00','20:00:00','21:00:00','22:00:00','23:00:00']
+x=range(len(times))
+fig= plt.figure()
+
+ax = fig.add_subplot(1,1,1)
+
+ax.set_xlabel('time')
+ax.set_ylabel('count')
+
+plt.xticks(x, times, rotation=90)
+plt.margins(0.08)
+plt.subplots_adjust(bottom=0.15)
+
+l1,=ax.plot(x,normalmode,'-b',label = 'normalmode')
+l2,=ax.plot(x,abnormalmode,'-r',label = 'abnormalmode')
+l3,=ax.plot(x,normalmax,'-c',label = 'normalmax')
+l4,=ax.plot(x,abnormalmax,'-m',label = 'abnormalmax')
+
+
+
+sin_legend = ax.legend(handles=[l1])
+ax.add_artist(sin_legend)
+sin_legend = ax.legend(handles=[l2])
+ax.add_artist(sin_legend)
+sin_legend = ax.legend(handles=[l3])
+ax.add_artist(sin_legend)
+sin_legend = ax.legend(handles=[l4])
+
+#box=ax.get_position()
+#ax.set_position()
+#ax.legend(loc='upper left',bbox_to_anchor=(1.0,0.5))
+
+ax.set_title('USB connect')
+ax.legend(loc='upper right')
+#ax.legend(loc='upper center', bbox_to_anchor=(0.6,0.95),ncol=3,fancybox=True,shadow=True)
+ax.grid(True)
+
+
+
+plt.savefig('./data/allusers/result/figure/figure51.eps',dpi = 1000,bbox_inches='tight')
+plt.show()

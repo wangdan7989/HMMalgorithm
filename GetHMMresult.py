@@ -225,7 +225,10 @@ def GetUserpro():
 
         userpro.append(proresult)
 
-    filename= "./data/allusers/userpro.csv"
+    # 得到用户60天的基于改进mm的方法的每天的概率，相乘
+    #filename= "./data/allusers/userpro.csv"
+    #得到用户60天的基于mm的方法的每天的概率，相加
+    filename = "./data/allusers/MM_userpro.csv"
     CSVFile.Writecsvtofile(filename,userpro)
     print userpro
 
@@ -375,16 +378,45 @@ def GetuserproROC():
     plt.plot(x,y,'r')
     plt.show()
 
+def GetMM_weekpro():
+    userpro = CSVFile.loadCSVfile1("./data/allusers/MM_userpro.csv")
+    userinfo = []
+    for item in userpro:
+        user = item[0]
+        state = item[1]
+        # print state
+        sumpro = []
+        for pro in item[2:9]:
+            if len(pro) > 0 and float(pro) > 0:
+                # print pro
+                #pro = -math.log(float(pro))
+
+                sumpro.append(float(pro))
+        #avgpro = sum(sumpro) / len(sumpro)
+        sumpro = sum(sumpro)
+        # avgpro = GetVar(sumpro)
+        #avgpro = GetCov(sumpro)
+        userinfo.append([user,state,sumpro])
+    CSVFile.Writecsvtofile("./data/allusers/MM_week_result.csv",userinfo)
+
+
+    print userinfo
+    # PloROC(userinfo,0.01,4000)#weekdayvar
+    #PloROC(userinfo, 0.1, 500)  # 40daysavg
 if __name__ == '__main__':
+    #GetUserpro()
+    GetMM_weekpro()
+    '''
     #userpro = CSVFile.loadCSVfile1("./data/allusers/ResultPro974.csv")
-    userpro = CSVFile.loadCSVfile1("./data/allusers/userpro1.csv")
+    #userpro = CSVFile.loadCSVfile1("./data/allusers/userpro1.csv")
+    userpro = CSVFile.loadCSVfile1("./data/allusers/MM_userpro.csv")
     userinfo = []
     for item in userpro:
         user = item[0]
         state = item[1]
         #print state
         sumpro =[]
-        for pro in item[2:42]:
+        for pro in item[2:9]:
             if len(pro)>0 and float(pro)>0:
                 #print pro
                 pro = -math.log(float(pro))
@@ -400,4 +432,4 @@ if __name__ == '__main__':
     #PloROC(userinfo,0.01,4000)#weekdayvar
     PloROC(userinfo, 0.1, 500)  # 40daysavg
     #nlist = [1,2,3,4,5,3,4,5,6]
-    #print GetVar(nlist)
+    #print GetVar(nlist)'''
