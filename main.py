@@ -483,8 +483,12 @@ plt.show()
 
 #one hour 用户的行为统计
 data = pd.read_csv('./data/allusers/iForestdata/onehour/connect/newavg.csv',index_col='id')
+#data = pd.read_csv('./data/allusers/iForestdata/onehour/disconnect/newavg.csv',index_col='id')
+#data = pd.read_csv('./data/allusers/iForestdata/onehour/file/newavg.csv',index_col='id')
+#data = pd.read_csv('./data/allusers/iForestdata/onehour/logon/newavg.csv',index_col='id')
+#data = pd.read_csv('./data/allusers/iForestdata/onehour/logoff/newavg.csv',index_col='id')
 #print data
-normalmode = data['normamode'][:24]
+normalmode = data['normalmode'][:24]
 abnormalmode = data['abnormalmode'][:24]
 normalmax = data['normalmax'][:24]
 abnormalmax = data['abnormalmax'][:24]
@@ -505,31 +509,33 @@ plt.xticks(x, times, rotation=90)
 plt.margins(0.08)
 plt.subplots_adjust(bottom=0.15)
 
-l1,=ax.plot(x,normalmode,'-b',label = 'normalmode')
-l2,=ax.plot(x,abnormalmode,'-r',label = 'abnormalmode')
-l3,=ax.plot(x,normalmax,'-c',label = 'normalmax')
-l4,=ax.plot(x,abnormalmax,'-m',label = 'abnormalmax')
-
-
-
-sin_legend = ax.legend(handles=[l1])
-ax.add_artist(sin_legend)
-sin_legend = ax.legend(handles=[l2])
-ax.add_artist(sin_legend)
-sin_legend = ax.legend(handles=[l3])
-ax.add_artist(sin_legend)
-sin_legend = ax.legend(handles=[l4])
-
-#box=ax.get_position()
-#ax.set_position()
-#ax.legend(loc='upper left',bbox_to_anchor=(1.0,0.5))
+l1,=ax.plot(x,normalmode,'-b',label = 'Nmode',)
+l2,=ax.plot(x,abnormalmode,'-r',label = 'ABmode',)
+l3,=ax.plot(x,normalmax,'-c',label = 'Nmax',)
+l4,=ax.plot(x,abnormalmax,'-m',label = 'ABmax',)
 
 ax.set_title('USB connect')
-ax.legend(loc='upper right')
-#ax.legend(loc='upper center', bbox_to_anchor=(0.6,0.95),ncol=3,fancybox=True,shadow=True)
+#ax.set_title('USB disconnect')
+#ax.set_title('File copy')
+#ax.set_title('Logon behavior')
+#ax.set_title('Logoff behavior',)
+
+#ax.legend(loc='upper right')
 ax.grid(True)
 
+box = ax.get_position()
+ax.set_position([box.x0, box.y0, box.width*0.9 , box.width* 1])
+ax.legend(loc='upper left', bbox_to_anchor=(1, 0.5),ncol=1,numpoints=1)
+leg = plt.gca().get_legend()
+ltext  = leg.get_texts()
+plt.setp(ltext, fontsize='small')
+
+#ax.grid(True)
 
 
 plt.savefig('./data/allusers/result/figure/figure51.eps',dpi = 1000,bbox_inches='tight')
+#plt.savefig('./data/allusers/result/figure/figure52.eps',dpi = 1000,bbox_inches='tight')
+#plt.savefig('./data/allusers/result/figure/figure53.eps',dpi = 1000,bbox_inches='tight')
+#plt.savefig('./data/allusers/result/figure/figure41.eps',dpi = 1000,bbox_inches='tight')
+#plt.savefig('./data/allusers/result/figure/figure42.eps',dpi = 1000,bbox_inches='tight')
 plt.show()
