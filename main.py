@@ -424,7 +424,7 @@ ax.set_ylim(-0.3,2.8)
 plt.savefig('./data/allusers/result/figure/figure2.eps',dpi = 1000,bbox_inches='tight')
 plt.show()
 '''
-'''
+
 #mm 和impro_mm的ROC对比
 data1 = pd.read_csv('./data/allusers/result/ROC_data/weekdayconnectavg.csv',index_col='id')
 data2 = pd.read_csv('./data/allusers/result/ROC_data/weekconnectpro.csv',index_col='id')
@@ -438,15 +438,15 @@ TPR3 =data3['TPR']
 
 fig= plt.figure()
 ax = fig.add_subplot(1,1,1)
-l1, = ax.plot(FPR1,TPR1,'-m',label = 'iT')
-l2, = ax.plot(FPR2,TPR2,'-y',label = 'iP')
-l3, = ax.plot(FPR3,TPR3,'-c',label = 'MM')
+l1, = ax.plot(FPR1,TPR1,'-m',label = 'IM')
+l2, = ax.plot(FPR2,TPR2,'-c',label = 'MM')
+#l3, = ax.plot(FPR3,TPR3,'-y',label = 'MM')
 sin_legend = ax.legend(handles=[l1], loc='lower right')
 ax.add_artist(sin_legend)
 sin_legend = ax.legend(handles=[l2], loc='lower right')
 ax.add_artist(sin_legend)
-sin_legend = ax.legend(handles=[l3], loc='lower right')
-ax.add_artist(sin_legend)
+#sin_legend = ax.legend(handles=[l3], loc='lower right')
+#ax.add_artist(sin_legend)
 #plt.legend(l1,('week_normalscore',),loc='lower right')
 #plt.legend(l2,('week_avgnormalscore',),loc='upper right')
 #plt.style.use('mystyle')
@@ -464,23 +464,13 @@ ax.set_ylabel('Insiders Identified %')
 y1=[0,1]
 x1=[0,1]
 ax.plot(x1,y1,'-b')
-plt.savefig('./data/allusers/result/figure/figure1.eps',dpi = 1000,bbox_inches='tight')
-plt.show()'''
-'''
-x = np.arange(10)
-fig = plt.figure()
-ax = plt.subplot(111)
-for i in xrange(5):
-    ax.plot(x, i * x, label='$y = %ix$'%i)
-# Shrink current axis by 20%
-box = ax.get_position()
-ax.set_position()
-# Put a legend to the right of the current axis
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+plt.savefig('./data/allusers/result/figure/figure1new.eps',dpi = 1000,bbox_inches='tight')
 plt.show()
 
-'''
 
+
+
+'''
 #one hour 用户的行为统计
 data = pd.read_csv('./data/allusers/iForestdata/onehour/connect/newavg.csv',index_col='id')
 #data = pd.read_csv('./data/allusers/iForestdata/onehour/disconnect/newavg.csv',index_col='id')
@@ -539,3 +529,4 @@ plt.savefig('./data/allusers/result/figure/figure51.eps',dpi = 1000,bbox_inches=
 #plt.savefig('./data/allusers/result/figure/figure41.eps',dpi = 1000,bbox_inches='tight')
 #plt.savefig('./data/allusers/result/figure/figure42.eps',dpi = 1000,bbox_inches='tight')
 plt.show()
+'''
